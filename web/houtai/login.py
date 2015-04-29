@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 import sqlite3 as lite
 import sys
 import json
@@ -68,8 +68,6 @@ def do_the_login():
     return 'OK'
 
 
-
-
 @app.route('/waitlist/<username>', methods=['GET'])
 def waitlist(username):
     if request.method == 'POST':
@@ -90,17 +88,15 @@ def show_the_add_form(username):
         cur = con.cursor()
         sql_command = """select email2 from waitlist where email1='""" + username + """'"""
         print sql_command
-        data = ""
+        data = []
+        jsondata = []
         for row in cur.execute(sql_command):
-            json_data = json.dumps(row)
-            print json_data
-            data += json_data
-
-        print data
-        if data == 'null':
-            return 'NO requests'
+            data.append(row[0])
+        jsondata.append(['waiting list',data])
+        if jsondata == []:
+            return 'NO people'
         else:
-            return data
+            return jsonify(jsondata)
     return 'OK'
 
 def do_the_add():
@@ -140,6 +136,56 @@ def do_the_response():
     return 'OK'
 
 
+@app.route('/search/<username>', methods=['GET'])
+def search(username):
+    return show_the_search_form(username)
+
+    
+
+
+def show_the_search_form(username):
+    print 'username:' + username
+    with con:
+        cur = con.cursor()
+        data=[]
+        sql_command = """select email from users where email='""" + username + """'"""
+        print sql_command
+        cur.execute(sql_command)
+        row_data = cur.fetchone()
+        json_data = json.dumps(data)
+        print json_data
+        if json_data == 'null':
+            return 'NO Such User'
+        else:
+            return json_data
+    return 'OK'
+
+
+
+
+@app.route('/friends/<username>', methods=['GET'])
+def friends(username):
+    return show_the_friends_form(username)
+
+    
+
+
+def show_the_friends_form(username):
+    print 'username:' + username
+    with con:
+        cur = con.cursor()
+        sql_command = """select email2,circle from friends where email1='""" + username + """'"""
+        print sql_command
+        data = []
+        jsondata = []
+        for row in cur.execute(sql_command):
+            data.append(row)
+        jsondata.append(['friends',data])
+        if jsondata == []:
+            return 'NO people'
+        else:
+            return jsonify(jsondata)
+    return 'OK'
 
 
 
