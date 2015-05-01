@@ -1,6 +1,6 @@
-var app = angular.module('app', []);
+var app = angular.module('app', ['ngCookies']);
 
-app.controller('MainCtrl', function($http) {
+app.controller('MainCtrl', function($http, $cookies, $cookieStore) {
     var main = this;
     main.registerInfo = {};
     main.loginInfo = {};
@@ -8,10 +8,34 @@ app.controller('MainCtrl', function($http) {
     main.login = login;
     main.register = register;
     main.newCircle = newCircle;
+    main.logout = logout;
+
+    init();
+
+    function init() {
+        if ($cookies.session && $cookies.email) {
+            main.loggedIn = true;
+        }
+    }
 
     function login(email, password) {
-        alert(email + ' ' + password);
-        main.loggedIn = true;
+        $http({
+            url: '/login',
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            data: JSON.stringify({
+                username: email,
+                password: password
+            })
+        }).success(function() {
+            $cookies.email = email;
+            var session = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 10);
+            $cookies.session = session;
+            $('#registerModal').modal('hide');
+            main.loggedIn = true;
+        }).error(function() {
+            alert("Failed Authentication");
+        })
     }
 
     function register(registerInfo) {
@@ -27,15 +51,28 @@ app.controller('MainCtrl', function($http) {
                     username: registerInfo.email,
                     password: registerInfo.password
                 })
-            }).success(function(data) {
-                console.log(JSON.stringify(data));
+            }).success(function() {
+                $cookies.email = registerInfo.email;
+                var session = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 10);
+                $cookies.session = session;
+                alert("Successed!");
                 $('#registerModal').modal('hide');
+                main.loggedIn = true;
             })
         }
     }
 
     function newCircle() {
         main.circles.push(main.circles.length + 1);
+    }
+
+    function logout() {
+        $cookieStore.remove('email');
+        $cookieStore.remove('session');
+
+        main.registerInfo = {};
+        main.loginInfo = {};
+        main.loggedIn = false;
     }
 
     main.posts = [{

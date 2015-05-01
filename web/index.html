@@ -46,6 +46,9 @@
                     <li>
                         <a href="" data-toggle="modal" data-target="#requestsModal">Requests</a>
                     </li>
+                    <li>
+                        <a href="" ng-click="main.logout()">Logout</a>
+                    </li>
                 </ul>
             </div>
             <!-- /#sidebar-wrapper -->
@@ -135,13 +138,13 @@
                 </div>
                 <div class="modal-body">
                     <h3>{{main.user.email}}</h3>
-                    <form>
-                        <h4>Avatar</h4>
-                        <img id="avatar" ng-src="{{main.user.avatar}}"/>
-                        <input type="hidden" id="avatarURI">
-                        <input type="file" accept="image/*" onchange="changeAvatar(this.files)">
-                        <button type="button" class="btn btn-primary">Change Avatar</button>
-                    </form>
+                    <!--<form>-->
+                        <!--<h4>Avatar</h4>-->
+                        <!--<img id="avatar" ng-src="{{main.user.avatar}}"/>-->
+                        <!--<input type="hidden" id="avatarURI">-->
+                        <!--<input type="file" accept="image/*" onchange="changeAvatar(this.files)">-->
+                        <!--<button type="button" class="btn btn-primary">Change Avatar</button>-->
+                    <!--</form>-->
                     <br/>
                     <form>
                         <input type="password" class="form-control" placeholder="New Password" required>
@@ -201,6 +204,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-cookies.js"></script>
     <script src="app.js"></script>
     <script>
         function handleFiles(files) {
@@ -222,20 +226,20 @@
                 reader.readAsDataURL(file);
             }
         }
-        function changeAvatar(files) {
-            for (var i = 0; i < files.length; i++) {
-                var file = files[i];
-                var imageType = /^image\//;
-
-                if (!imageType.test(file.type)) {
-                    continue;
-                }
-
-                var reader = new FileReader();
-                reader.onload = (function() { return function(e) { document.querySelector("#avatar").src = e.target.result; document.querySelector("#avatarURI").value = e.target.result; }; })();
-                reader.readAsDataURL(file);
-            }
-        }
+//        function changeAvatar(files) {
+//            for (var i = 0; i < files.length; i++) {
+//                var file = files[i];
+//                var imageType = /^image\//;
+//
+//                if (!imageType.test(file.type)) {
+//                    continue;
+//                }
+//
+//                var reader = new FileReader();
+//                reader.onload = (function() { return function(e) { document.querySelector("#avatar").src = e.target.result; document.querySelector("#avatarURI").value = e.target.result; }; })();
+//                reader.readAsDataURL(file);
+//            }
+//        }
     </script>
   </body>
 </html>
