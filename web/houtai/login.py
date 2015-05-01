@@ -6,7 +6,7 @@ import json
 
 
 app = Flask(__name__)
-cors = CORS(app)
+#cors = CORS(app)
 
 
 con = lite.connect('picture_share.db', check_same_thread=False)
