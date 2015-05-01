@@ -18,13 +18,18 @@ app.controller('MainCtrl', function($http) {
         if (registerInfo.password != registerInfo.repass) {
             alert("Passwords don't match");
         } else {
-            console.log(JSON.stringify(registerInfo))
-            $http.post('http://127.0.0.1:5000/register', {
-                username: registerInfo.email,
-                password: registerInfo.password
+            //console.log(JSON.stringify(registerInfo));
+            $http({
+                url: '/register',
+                method: "POST",
+                headers: { 'Content-Type': 'application/json' },
+                data: JSON.stringify({
+                    username: registerInfo.email,
+                    password: registerInfo.password
+                })
             }).success(function(data) {
                 console.log(JSON.stringify(data));
-            }).error(function(){})
+            })
         }
     }
 

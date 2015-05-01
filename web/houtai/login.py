@@ -45,6 +45,7 @@ def show_the_register_form():
     return 'OK'
 
 def do_the_register():
+    request.form = request.get_json()
     print 'username:' + request.form['username']
     print 'password:' +request.form['password']
     with con:
@@ -67,6 +68,7 @@ def show_the_login_form():
     return 'OK'
 
 def do_the_login():
+    request.form = request.get_json()
     print 'username:' + request.form['username']
     print 'password:' +request.form['password']
     with con:
@@ -116,6 +118,7 @@ def show_the_add_form(username):
     return 'OK'
 
 def do_the_add():
+    request.form = request.get_json()
     print 'username:' + request.form['username']
     print 'target:' + request.form['target']
 
@@ -134,6 +137,7 @@ def response():
 
     
 def do_the_response():
+    request.form = request.get_json()
     print 'username:' + request.form['username']
     print 'target:' + request.form['target']
     print 'result:' + request.form['result']
