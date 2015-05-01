@@ -105,7 +105,7 @@ def delete_friend(username):
     return do_delete_friend(username)
 
 def do_delete_friend(username):
-    #request.form = request.get_json()
+    request.form = request.get_json()
     print 'username:' + username
     print 'friendname:' + request.form['friend_name']
     with con:

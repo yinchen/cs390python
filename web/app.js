@@ -22,6 +22,7 @@ app.controller('MainCtrl', function($http, $cookies, $cookieStore) {
     main.displayFriend = displayFriend;
     main.newPost = newPost;
     main.addToCircle = addToCircle;
+    main.removeFriend = removeFriend;
 
     init();
 
@@ -232,5 +233,19 @@ app.controller('MainCtrl', function($http, $cookies, $cookieStore) {
         })
     }
 
-
+    function removeFriend(friend) {
+        $http({
+            url: '/delete_friend/' + $cookies.email,
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            data: JSON.stringify({
+                friend_name: friend.email
+            })
+        }).success(function() {
+            var i = main.friends.indexOf(friend);
+            if(i != -1) {
+                main.requests.splice(i, 1);
+            }
+        })
+    }
 });
