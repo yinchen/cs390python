@@ -210,7 +210,7 @@ def do_the_post():
     request.form = request.get_json()
     print 'username:' + request.form['username']
     print 'text:' + request.form['text']
-    print 'circle:' + request.form['circle']
+    print 'circle:' + str(request.form['circle'])
     print 'picture:' + request.form['picture']
     t = datetime.now()
     print t
@@ -218,7 +218,7 @@ def do_the_post():
     print t
     with con:
         cur = con.cursor()
-        sql_command = """insert into posts values('""" + request.form['username'] + """', '""" + request.form['text'] + """', '""" + request.form['circle'] + """','""" + request.form['picture'] + """','""" + t + """')"""
+        sql_command = """insert into posts values('""" + request.form['username'] + """', '""" + request.form['text'] + """', '""" + str(request.form['circle']) + """','""" + request.form['picture'] + """','""" + t + """')"""
         print sql_command
         cur.execute(sql_command)
     return 'OK'

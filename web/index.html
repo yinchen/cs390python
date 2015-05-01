@@ -114,16 +114,19 @@
                 </div>
                 <div class="modal-body">
                     <form>
-                        <textarea class="form-control" rows="3" placeholder="What's in your mind?"></textarea>
+                        <select ng-model="main.postCircle" ng-options="circle for circle in main.circles">
+                            <option value="">-- Choose Circle --</option>
+                        </select>
+                        <textarea class="form-control" rows="3" placeholder="What's in your mind?" ng-model="main.postText"></textarea>
                         <label>Upload an Image</label>
-                        <input type="hidden" id="imageURI">
+                        <input type="hidden" id="imageURI" ng-model="main.postImage">
                         <input type="file" accept="image/*" id="input" onchange="handleFiles(this.files)">
                         <div id="preview"></div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Post</button>
+                    <button type="button" class="btn btn-primary" ng-click="main.newPost(main.postCircle, main.postText)">Post</button>
                 </div>
             </div>
         </div>
@@ -134,10 +137,10 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="profileLabel">Friends</h4>
+                    <h4 class="modal-title" id="profileLabel">My Profile</h4>
                 </div>
                 <div class="modal-body">
-                    <h3>{{main.user.email}}</h3>
+                    <h3>{{main.me}}</h3>
                     <!--<form>-->
                         <!--<h4>Avatar</h4>-->
                         <!--<img id="avatar" ng-src="{{main.user.avatar}}"/>-->
