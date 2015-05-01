@@ -100,6 +100,20 @@ def get_circle_amount(username):
         return jsonify(jsondata)
     return 'OK'
 
+@app.route('/delete_friend/<username>', methods=['POST'])
+def delete_friend(username):
+    return do_delete_friend(username)
+
+def do_delete_friend(username):
+    #request.form = request.get_json()
+    print 'username:' + username
+    print 'friendname:' + request.form['friend_name']
+    with con:
+        cur = con.cursor()
+        sql_command = """DELETE FROM friends WHERE (email1='""" + username + """' AND email2='""" + request.form['friend_name'] + """') OR (email1='""" + request.form['friend_name']  + """'AND email2= '""" + username + """')"""
+        print sql_command
+    return 'OK'
+
 
 
 
