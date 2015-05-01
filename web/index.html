@@ -15,10 +15,10 @@
     <div id="login" class="container" ng-hide="main.loggedIn">
         <div class="row">
             <div class="col-md-4 col-md-offset-4">
-                <form class="form-signin" ng-submit="main.login(main.email, main.password)">
+                <form class="form-signin" ng-submit="main.login(main.loginInfo.email, main.loginInfo.password)">
                     <h2 class="form-signin-heading">Please log in</h2>
-                    <input type="email" id="inputEmail" class="form-control" placeholder="Email address" ng-model="main.email" required autofocus>
-                    <input type="password" id="inputPassword" class="form-control" placeholder="Password" ng-model="main.password" required>
+                    <input type="email" id="inputEmail" class="form-control" placeholder="Email address" ng-model="main.loginInfo.email" required autofocus>
+                    <input type="password" id="inputPassword" class="form-control" placeholder="Password" ng-model="main.loginInfo.password" required>
                     <button class="btn btn-lg btn-primary btn-block" type="submit">Log in</button>
                 </form>
                 <a href="" class="pull-right" data-toggle="modal" data-target="#registerModal">Sign up</a>
@@ -82,21 +82,21 @@
                     <form>
                         <div class="form-group">
                             <label>Email address</label>
-                            <input type="email" class="form-control" placeholder="Email address">
+                            <input type="email" class="form-control" placeholder="Email address" ng-model="main.registerInfo.email">
                         </div>
                         <div class="form-group">
                             <label>Password</label>
-                            <input type="password" class="form-control" placeholder="Password">
+                            <input type="password" class="form-control" placeholder="Password" ng-model="main.registerInfo.password">
                         </div>
                         <div class="form-group">
                             <label>Confirm Password</label>
-                            <input type="password" class="form-control" placeholder="Confirm Password">
+                            <input type="password" class="form-control" placeholder="Confirm Password" ng-model="main.registerInfo.repass">
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Register</button>
+                    <button type="button" class="btn btn-primary" ng-click="main.register(main.registerInfo)">Register</button>
                 </div>
             </div>
         </div>

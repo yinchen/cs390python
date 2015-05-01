@@ -1,14 +1,31 @@
 var app = angular.module('app', []);
 
-app.controller('MainCtrl', function() {
+app.controller('MainCtrl', function($http) {
     var main = this;
+    main.registerInfo = {};
+    main.loginInfo = {};
     main.loggedIn = false;
     main.login = login;
+    main.register = register;
     main.newCircle = newCircle;
 
     function login(email, password) {
         alert(email + ' ' + password);
         main.loggedIn = true;
+    }
+
+    function register(registerInfo) {
+        if (registerInfo.password != registerInfo.repass) {
+            alert("Passwords don't match");
+        } else {
+            console.log(JSON.stringify(registerInfo))
+            $http.post('http://127.0.0.1:5000/register', {
+                username: registerInfo.email,
+                password: registerInfo.password
+            }).success(function(data) {
+                console.log(JSON.stringify(data));
+            }).error(function(){})
+        }
     }
 
     function newCircle() {
