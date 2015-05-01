@@ -108,10 +108,10 @@ def do_delete_friend(username):
     #request.form = request.get_json()
     print 'username:' + username
     print 'friendname:' + request.form['friend_name']
-    with con:
-        cur = con.cursor()
-        sql_command = """DELETE FROM friends WHERE (email1='""" + username + """' AND email2='""" + request.form['friend_name'] + """') OR (email1='""" + request.form['friend_name']  + """'AND email2= '""" + username + """')"""
-        print sql_command
+   # with con:
+    #    cur = con.cursor()
+    sql_command = """DELETE FROM friends WHERE (email1='""" + username + """' AND email2='""" + request.form['friend_name'] + """') OR (email1='""" + request.form['friend_name']  + """'AND email2= '""" + username + """')"""
+    print sql_command
     return 'OK'
 
 
@@ -243,7 +243,7 @@ def do_the_post():
     request.form = request.get_json()
     print 'username:' + request.form['username']
     print 'text:' + request.form['text']
-    print 'circle:' + request.form['circle']
+    print 'circle:' + str(request.form['circle'])
     print 'picture:' + request.form['picture']
     t = datetime.now()
     print t
@@ -251,7 +251,7 @@ def do_the_post():
     print t
     with con:
         cur = con.cursor()
-        sql_command = """insert into posts values('""" + request.form['username'] + """', '""" + request.form['text'] + """', '""" + request.form['circle'] + """','""" + request.form['picture'] + """','""" + t + """')"""
+        sql_command = """insert into posts values('""" + request.form['username'] + """', '""" + request.form['text'] + """', '""" + str(request.form['circle']) + """','""" + request.form['picture'] + """','""" + t + """')"""
         print sql_command
         cur.execute(sql_command)
     return 'OK'
@@ -268,7 +268,7 @@ def do_news_feed():
     print 'username:' + request.form['username']
     with con:
         cur = con.cursor()
-        sql_command = """SELECT DISTINCT p.text, p.owner,p.time,p.picture_uri from posts p, friends f WHERE p.owner = '""" + request.form['username'] + """' OR (f.email2 = '""" + request.form['username'] + """' and f.email1 = p.owner and f.circle = p.circle) ORDER BY p.time"""
+        sql_command = """SELECT DISTINCT p.text, p.owner,p.time,p.picture_uri from posts p, friends f WHERE p.owner = '""" + request.form['username'] + """' OR (f.email2 = '""" + request.form['username'] + """' and f.email1 = p.owner and f.circle = p.circle) ORDER BY p.time DESC"""
         print sql_command
         jsondata = []
         for row in cur.execute(sql_command):
@@ -283,7 +283,6 @@ def do_news_feed():
            # data.append(row)
         return jsonify({"feed":jsondata})
     return 'OK'
-
 
 
 
