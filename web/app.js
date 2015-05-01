@@ -29,6 +29,7 @@ app.controller('MainCtrl', function($http) {
                 })
             }).success(function(data) {
                 console.log(JSON.stringify(data));
+                $('#registerModal').modal('hide');
             })
         }
     }

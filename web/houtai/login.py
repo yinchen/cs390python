@@ -1,13 +1,10 @@
 from flask import Flask, request, jsonify, send_from_directory
-from flask.ext.cors import CORS
 import sqlite3 as lite
 import sys
 import json
 
 
 app = Flask(__name__)
-#cors = CORS(app)
-
 
 con = lite.connect('picture_share.db', check_same_thread=False)
 
