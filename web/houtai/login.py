@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask.ext.cors import CORS
 import sqlite3 as lite
 import sys
@@ -6,7 +6,7 @@ import json
 
 
 app = Flask(__name__)
-cors = CORS(app)
+#cors = CORS(app)
 
 
 con = lite.connect('picture_share.db', check_same_thread=False)
@@ -16,6 +16,21 @@ with con:
     cur.execute('SELECT SQLITE_VERSION()')
     data = cur.fetchone()
     print "SQLite version: %s" % data
+
+
+
+@app.route('/')
+def send_js():
+    return send_from_directory('..','index.html')
+
+@app.route('/style.css')
+def send_jsa():
+    return send_from_directory('..','style.css')
+
+
+@app.route('/app.js')
+def send_jsaa():
+    return send_from_directory('..','app.js')
 
     
 @app.route('/register', methods=['GET', 'POST'])
