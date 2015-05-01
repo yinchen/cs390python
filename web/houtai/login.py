@@ -120,15 +120,31 @@ def add_circle(username):
     return do_add_circle(username)
 
 def do_add_circle(username):
-    #request.form = request.get_json()
+    request.form = request.get_json()
     print 'username:' + username
     print 'friendname:' + request.form['friend_name']
-    print 'circle_num:' + request.form['circle_num']
+    print 'circle_num:' + str(request.form['circle_num'])
     with con:
         cur = con.cursor()
-        sql_command = """UPDATE friends SET circle='""" + request.form['circle_num'] + """' WHERE (email1='""" + username + """' AND email2='""" + request.form['friend_name'] + """')"""
+        sql_command = """UPDATE friends SET circle='""" + str(request.form['circle_num']) + """' WHERE (email1='""" + username + """' AND email2='""" + request.form['friend_name'] + """')"""
         cur.execute(sql_command)
     return 'OK'
+
+
+@app.route('/change_pass/<username>',methods=['POST'])
+def change_pass(username):
+    return do_change_pass(username)
+
+def do_change_pass(username):
+    #request.form = request.get_json()
+    print 'username:' + username
+    print 'pass:' + str(request.form['pass'])
+    with con:
+        cur = con.cursor()
+        sql_command = """UPDATE users SET password='""" + str(request.form['pass']) + """' WHERE (email='""" + username + """')"""
+        cur.execute(sql_command)
+    return 'OK'
+
 
 
 
