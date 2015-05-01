@@ -1,4 +1,5 @@
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, send_from_directory,abort
+from datetime import datetime, date
 import sqlite3 as lite
 import sys
 import json
@@ -184,24 +185,19 @@ def show_the_search_form(username):
 def friends(username):
     return show_the_friends_form(username)
 
-
-
-
 def show_the_friends_form(username):
     print 'username:' + username
     with con:
         cur = con.cursor()
         sql_command = """select email2,circle from friends where email1='""" + username + """'"""
         print sql_command
-        data = []
         jsondata = []
         for row in cur.execute(sql_command):
-            data.append(row)
-        jsondata.append(['friends',data])
-        if jsondata == []:
-            return 'NO people'
-        else:
-            return jsonify(jsondata)
+            data = {}
+            data['email'] = row[0];
+            data['circle'] = row[1];
+            jsondata.append(data)
+        return jsonify({"friends":jsondata})
     return 'OK'
 
 @app.route('/post',methods=['POST'])
@@ -211,22 +207,49 @@ def post():
         return do_the_post()
 
 def do_the_post():
-    #request.form = request.get_json()
-    post_form = request.get_json()
-    print 'username:' + post_form['username']
-    print 'text:' + post_form['text']
-    print 'circle:' + post_form['circle']
-    print 'picture:' + post_form['picture']
+    request.form = request.get_json()
+    print 'username:' + request.form['username']
+    print 'text:' + request.form['text']
+    print 'circle:' + request.form['circle']
+    print 'picture:' + request.form['picture']
+    t = datetime.now()
+    print t
+    t = t.strftime('%Y-%m-%d %H:%M:%S')
+    print t
     with con:
         cur = con.cursor()
-        sql_command = """insert into posts values('""" + request.form['username'] + """', '""" + request.form['text'] + """', '""" + request.form['circle'] + """','""" + request.form['picture'] + """')"""
+        sql_command = """insert into posts values('""" + request.form['username'] + """', '""" + request.form['text'] + """', '""" + request.form['circle'] + """','""" + request.form['picture'] + """','""" + t + """')"""
         print sql_command
         cur.execute(sql_command)
     return 'OK'
 
 
+@app.route('/newsfeed',methods=['POST'])
 
+def news_feed():
+    if request.method == 'POST':
+        return do_news_feed()
 
+def do_news_feed():
+    request.form = request.get_json()
+    print 'username:' + request.form['username']
+    with con:
+        cur = con.cursor()
+        sql_command = """SELECT DISTINCT p.text, p.owner,p.time,p.picture_uri from posts p, friends f WHERE p.owner = '""" + request.form['username'] + """' OR (f.email2 = '""" + request.form['username'] + """' and f.email1 = p.owner and f.circle = p.circle) ORDER BY p.time"""
+        print sql_command
+        jsondata = []
+        for row in cur.execute(sql_command):
+            data = {}
+            data['text'] = row[0]
+            data['owner'] = row[1]
+            data['picture'] = row[3]
+            #jsondata[i].append(['text',row[0]])
+            #jsondata[i].append(['owner',row[1]])
+            #jsondata[i].append(['time',row[2]])
+            jsondata.append(data)
+           # data.append(row)
+        return jsonify({"feed":jsondata})
+    return 'OK'
 
 
 
