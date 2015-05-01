@@ -244,7 +244,7 @@ app.controller('MainCtrl', function($http, $cookies, $cookieStore) {
         }).success(function() {
             var i = main.friends.indexOf(friend);
             if(i != -1) {
-                main.requests.splice(i, 1);
+                main.friends.splice(i, 1);
             }
         })
     }
