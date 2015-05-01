@@ -114,6 +114,19 @@ def do_delete_friend(username):
     print sql_command
     return 'OK'
 
+@app.route('/add_circle/<username>',methods=['POST'])
+def add_circle(username):
+    return do_add_circle(username)
+
+def do_add_circle(username):
+    #request.form = request.get_json()
+    print 'username:' + username
+    print 'friendname:' + request.form['friend_name']
+    print 'circle_num:' + request.form['circle_num']
+    with con:
+        cur = con.cursor()
+        sql_command = """UPDATE friends SET circle='""" + request.form['circle_num'] + """' WHERE (email1='""" + username + """' AND email2='""" + request.form['friend_name'] + """')"""
+    return 'OK'
 
 
 
