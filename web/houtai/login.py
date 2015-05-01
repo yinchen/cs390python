@@ -84,6 +84,25 @@ def do_the_login():
     return 'OK'
 
 
+@app.route('/circle_amount/<username>', methods=['GET'])
+def circle_amount(username):
+    return get_circle_amount(username)
+
+def get_circle_amount(username):
+    print 'username:' + username
+    with con:
+        cur = con.cursor()
+        sql_command = """select MAX(circle) from friends where email1='""" + username + """'"""
+        print sql_command
+        jsondata = []
+        for row in cur.execute(sql_command):
+            jsondata.append({'circles',row[0]})
+        return jsonify(jsondata)
+    return 'OK'
+
+
+
+
 @app.route('/waitlist/<username>', methods=['GET'])
 def waitlist(username):
     if request.method == 'POST':
