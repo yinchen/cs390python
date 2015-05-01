@@ -9,7 +9,7 @@ app = Flask(__name__)
 con = lite.connect('picture_share.db', check_same_thread=False)
 
 with con:
-    cur = con.cursor()    
+    cur = con.cursor()
     cur.execute('SELECT SQLITE_VERSION()')
     data = cur.fetchone()
     print "SQLite version: %s" % data
@@ -29,7 +29,7 @@ def send_jsa():
 def send_jsaa():
     return send_from_directory('..','app.js')
 
-    
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -108,7 +108,7 @@ def show_the_add_form(username):
         for row in cur.execute(sql_command):
             data.append(row[0])
         jsondata.append(['waiting list',data])
-        if jsondata == []:            
+        if jsondata == []:
             return 'NO people'
         else:
             return jsonify(jsondata)
@@ -132,7 +132,7 @@ def response():
     if request.method == 'POST':
         return do_the_response()
 
-    
+
 def do_the_response():
     request.form = request.get_json()
     print 'username:' + request.form['username']
@@ -157,7 +157,7 @@ def do_the_response():
 def search(username):
     return show_the_search_form(username)
 
-    
+
 
 
 def show_the_search_form(username):
@@ -184,7 +184,7 @@ def show_the_search_form(username):
 def friends(username):
     return show_the_friends_form(username)
 
-    
+
 
 
 def show_the_friends_form(username):
@@ -202,6 +202,26 @@ def show_the_friends_form(username):
             return 'NO people'
         else:
             return jsonify(jsondata)
+    return 'OK'
+
+@app.route('/post',methods=['POST'])
+
+def post():
+    if request.method == 'POST':
+        return do_the_post()
+
+def do_the_post():
+    #request.form = request.get_json()
+    post_form = request.get_json()
+    print 'username:' + post_form['username']
+    print 'text:' + post_form['text']
+    print 'circle:' + post_form['circle']
+    print 'picture:' + post_form['picture']
+    with con:
+        cur = con.cursor()
+        sql_command = """insert into posts values('""" + request.form['username'] + """', '""" + request.form['text'] + """', '""" + request.form['circle'] + """','""" + request.form['picture'] + """')"""
+        print sql_command
+        cur.execute(sql_command)
     return 'OK'
 
 
