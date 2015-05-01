@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask.ext.cors import CORS
 import sqlite3 as lite
 import sys
 import json
