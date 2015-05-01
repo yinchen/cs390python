@@ -60,9 +60,9 @@
                         <div class="col-lg-12">
                             <button class="btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#newPostModal">New Post</button>
                             <div ng-repeat="post in main.posts">
-                                <h3>{{post.user}}</h3>
-                                <p>{{post.message}}</p>
-                                <img ng-src="{{post.image}}" />
+                                <h3>{{post.owner}}</h3>
+                                <p>{{post.text}}</p>
+                                <img ng-src="{{post.picture}}" />
                             </div>
                         </div>
                     </div>
@@ -170,9 +170,9 @@
                     <button type="button" class="btn btn-primary" ng-click="main.addFriend(main.friendEmail)">Add</button>
                     <button type="button" class="btn btn-default" ng-click="main.newCircle()">New Circle</button>
                     <div ng-repeat="friend in main.friends">
-                        <h2>{{friend.name}} in Circle {{friend.circle}}</h2>
+                        <h2>{{main.displayFriend(friend.email, friend.circle)}}</h2>
                         <div><button type="button" class="btn btn-danger">Remove Friend</button></div><br/>
-                        <button type="button" class="btn btn-default" ng-repeat="circle in main.circles">Add to {{circle}}</button>&nbsp<a href="">Remove From Circle</a>
+                        <button type="button" class="btn btn-default" ng-repeat="circle in main.circles">Add to {{circle}}</button>&nbsp<a href="" ng-hide="friend.circle == 0">Remove From Circle</a>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -191,7 +191,7 @@
                 </div>
                 <div class="modal-body">
                     <div ng-repeat="request in main.requests">
-                        <span>{{request}}</span>&nbsp&nbsp<button type="button" class="btn btn-primary">Accept</button>&nbsp<button type="button" class="btn btn-danger">Deny</button>
+                        <span>{{request}}</span>&nbsp&nbsp<button type="button" class="btn btn-primary" ng-click="main.requestResponse(true, request)">Accept</button>&nbsp<button type="button" class="btn btn-danger" ng-click="main.requestResponse(false, request)">Deny</button>
                     </div>
                 </div>
                 <div class="modal-footer">
