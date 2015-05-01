@@ -136,7 +136,7 @@ def change_pass(username):
     return do_change_pass(username)
 
 def do_change_pass(username):
-    #request.form = request.get_json()
+    request.form = request.get_json()
     print 'username:' + username
     print 'pass:' + str(request.form['pass'])
     with con:

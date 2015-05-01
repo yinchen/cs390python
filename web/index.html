@@ -150,8 +150,8 @@
                     <!--</form>-->
                     <br/>
                     <form>
-                        <input type="password" class="form-control" placeholder="New Password" required>
-                        <button type="button" class="btn btn-primary">Change Password</button>
+                        <input type="password" class="form-control" placeholder="New Password" ng-model="main.newPass" required>
+                        <button type="button" class="btn btn-primary" ng-click="main.changePass(main.newPass)">Change Password</button>
                     </form>
                 </div>
                 <div class="modal-footer">

@@ -10,6 +10,7 @@ app.controller('MainCtrl', function($http, $cookies, $cookieStore) {
     main.circles = [];
     main.postCircle = null;
     main.postText = "";
+    main.newPass = "";
     main.postImage = undefined;
     main.loggedIn = false;
     main.login = login;
@@ -23,6 +24,7 @@ app.controller('MainCtrl', function($http, $cookies, $cookieStore) {
     main.newPost = newPost;
     main.addToCircle = addToCircle;
     main.removeFriend = removeFriend;
+    main.changePass = changePass;
 
     init();
 
@@ -130,6 +132,7 @@ app.controller('MainCtrl', function($http, $cookies, $cookieStore) {
         main.me = undefined;
         main.postCircle = null;
         main.postText = "";
+        main.newPass = "";
         main.postImage = undefined;
     }
 
@@ -246,6 +249,21 @@ app.controller('MainCtrl', function($http, $cookies, $cookieStore) {
             if(i != -1) {
                 main.friends.splice(i, 1);
             }
+        })
+    }
+
+    function changePass(pass) {
+        $http({
+            url: '/change_pass/' + $cookies.email,
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            data: JSON.stringify({
+                pass: pass
+            })
+        }).success(function() {
+            alert('Change succeed! Please log in again!');
+            $('#profileModal').modal('hide');
+            main.logout();
         })
     }
 });
