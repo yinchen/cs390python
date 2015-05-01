@@ -40,6 +40,7 @@ c.execute('''CREATE TABLE posts
               text TEXT NOT NULL,
               circle INTEGER NOT NULL,
               picture_uri TEXT,
+              time timestamp NOT NULL,
               FOREIGN KEY(owner) REFERENCES users(email))''')
 
 # Create sessions table
