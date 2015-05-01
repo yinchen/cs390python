@@ -5,7 +5,7 @@ import json
 
 
 app = Flask(__name__)
-
+cors = CORS(app)
 
 
 con = lite.connect('picture_share.db', check_same_thread=False)
@@ -62,7 +62,7 @@ def do_the_login():
         json_data = json.dumps(data)
         print json_data
         if json_data == 'null':
-            return 'NOT OK'
+            abort(401)
         else:
             return json_data
     return 'OK'
@@ -93,7 +93,7 @@ def show_the_add_form(username):
         for row in cur.execute(sql_command):
             data.append(row[0])
         jsondata.append(['waiting list',data])
-        if jsondata == []:
+        if jsondata == []:            
             return 'NO people'
         else:
             return jsonify(jsondata)
