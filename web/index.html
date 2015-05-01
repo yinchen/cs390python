@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="app">
   <head>
     <meta charset="utf-8">
     <title>MyLink</title>
@@ -10,15 +10,15 @@
     <link href="style.css" rel="stylesheet">
   </head>
 
-  <body>
+  <body ng-controller="MainCtrl as main">
 
-    <div id="login" class="container">
+    <div id="login" class="container" ng-hide="main.loggedIn">
         <div class="row">
             <div class="col-md-4 col-md-offset-4">
-                <form class="form-signin">
+                <form class="form-signin" ng-submit="main.login(main.email, main.password)">
                     <h2 class="form-signin-heading">Please log in</h2>
-                    <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
-                    <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+                    <input type="email" id="inputEmail" class="form-control" placeholder="Email address" ng-model="main.email" required autofocus>
+                    <input type="password" id="inputPassword" class="form-control" placeholder="Password" ng-model="main.password" required>
                     <button class="btn btn-lg btn-primary btn-block" type="submit">Log in</button>
                 </form>
                 <a href="" class="pull-right" data-toggle="modal" data-target="#registerModal">Sign up</a>
@@ -26,8 +26,49 @@
         </div>
     </div> <!-- /container -->
 
-    <div id="main" class="container">
-        <h1>This is main</h1>
+    <div id="main" ng-show="main.loggedIn">
+        <div id="wrapper" class="">
+
+            <!-- Sidebar -->
+            <div id="sidebar-wrapper">
+                <ul class="sidebar-nav">
+                    <li class="sidebar-brand">
+                        <a href="">
+                            MyLink
+                        </a>
+                    </li>
+                    <li>
+                        <a href="" data-toggle="modal" data-target="#profileModal">My Profile</a>
+                    </li>
+                    <li>
+                        <a href="" data-toggle="modal" data-target="#friendsModal">Friends</a>
+                    </li>
+                    <li>
+                        <a href="" data-toggle="modal" data-target="#requestsModal">Requests</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /#sidebar-wrapper -->
+
+            <!-- Page Content -->
+            <div id="page-content-wrapper">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <button class="btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#newPostModal">New Post</button>
+                            <div ng-repeat="post in main.posts">
+                                <h3>{{post.user}}</h3>
+                                <p>{{post.message}}</p>
+                                <img ng-src="{{post.image}}" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /#page-content-wrapper -->
+
+        </div>
+        <!-- /#wrapper -->
     </div>
 
     <div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel" aria-hidden="true">
@@ -60,8 +101,141 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="newPostModal" tabindex="-1" role="dialog" aria-labelledby="newPostLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="newPostLabel">New Post</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <textarea class="form-control" rows="3" placeholder="What's in your mind?"></textarea>
+                        <label>Upload an Image</label>
+                        <input type="hidden" id="imageURI">
+                        <input type="file" accept="image/*" id="input" onchange="handleFiles(this.files)">
+                        <div id="preview"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Post</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="profileLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="profileLabel">Friends</h4>
+                </div>
+                <div class="modal-body">
+                    <h3>{{main.user.email}}</h3>
+                    <form>
+                        <h4>Avatar</h4>
+                        <img id="avatar" ng-src="{{main.user.avatar}}"/>
+                        <input type="hidden" id="avatarURI">
+                        <input type="file" accept="image/*" onchange="changeAvatar(this.files)">
+                        <button type="button" class="btn btn-primary">Change Avatar</button>
+                    </form>
+                    <br/>
+                    <form>
+                        <input type="password" class="form-control" placeholder="New Password" required>
+                        <button type="button" class="btn btn-primary">Change Password</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="friendsModal" tabindex="-1" role="dialog" aria-labelledby="friendsLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="friendsLabel">Friends</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="form-control" placeholder="Enter your friend's email"/>
+                    <button type="button" class="btn btn-primary">Add</button>
+                    <button type="button" class="btn btn-default" ng-click="main.newCircle()">New Circle</button>
+                    <div ng-repeat="friend in main.friends">
+                        <h2>{{friend.name}} in Circle {{friend.circle}}</h2>
+                        <div><button type="button" class="btn btn-danger">Remove Friend</button></div><br/>
+                        <button type="button" class="btn btn-default" ng-repeat="circle in main.circles">Add to {{circle}}</button>&nbsp<a href="">Remove From Circle</a>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="requestsModal" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="requestsLabel">Friend Requests</h4>
+                </div>
+                <div class="modal-body">
+                    <div ng-repeat="request in main.requests">
+                        <span>{{request}}</span>&nbsp&nbsp<button type="button" class="btn btn-primary">Accept</button>&nbsp<button type="button" class="btn btn-danger">Deny</button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.js"></script>
+    <script src="app.js"></script>
+    <script>
+        function handleFiles(files) {
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+                var imageType = /^image\//;
+
+                if (!imageType.test(file.type)) {
+                    continue;
+                }
+
+                var img = document.createElement("img");
+                img.classList.add("img-responsive");
+                img.file = file;
+                document.querySelector("#preview").appendChild(img); // Assuming that "preview" is the div output where the content will be displayed.
+
+                var reader = new FileReader();
+                reader.onload = (function(aImg) { return function(e) { aImg.src = e.target.result; document.querySelector("#imageURI").value = e.target.result; }; })(img);
+                reader.readAsDataURL(file);
+            }
+        }
+        function changeAvatar(files) {
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+                var imageType = /^image\//;
+
+                if (!imageType.test(file.type)) {
+                    continue;
+                }
+
+                var reader = new FileReader();
+                reader.onload = (function() { return function(e) { document.querySelector("#avatar").src = e.target.result; document.querySelector("#avatarURI").value = e.target.result; }; })();
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
   </body>
 </html>
