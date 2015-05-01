@@ -175,7 +175,7 @@
                     <div ng-repeat="friend in main.friends">
                         <h2>{{main.displayFriend(friend.email, friend.circle)}}</h2>
                         <div><button type="button" class="btn btn-danger" ng-click="main.removeFriend(friend)">Remove Friend</button></div><br/>
-                        <button type="button" class="btn btn-default" ng-repeat="circle in main.circles" ng-click="main.addToCircle(friend, circle)">Add to {{circle}}</button><a href="" ng-hide="friend.circle==0" ng-click="main.addToCircle(friend, circle)">Remove from Circle</a>
+                        <button type="button" class="btn btn-default" ng-repeat="circle in main.circles" ng-click="main.addToCircle(friend, circle)">Add to {{circle}}</button><a href="" ng-hide="friend.circle==0" ng-click="main.addToCircle(friend, 0)">Remove from Circle</a>
                     </div>
                 </div>
                 <div class="modal-footer">
