@@ -108,9 +108,10 @@ def do_delete_friend(username):
     #request.form = request.get_json()
     print 'username:' + username
     print 'friendname:' + request.form['friend_name']
-   # with con:
-    #    cur = con.cursor()
-    sql_command = """DELETE FROM friends WHERE (email1='""" + username + """' AND email2='""" + request.form['friend_name'] + """') OR (email1='""" + request.form['friend_name']  + """'AND email2= '""" + username + """')"""
+    with con:
+        cur = con.cursor()
+        sql_command = """DELETE FROM friends WHERE (email1='""" + username + """' AND email2='""" + request.form['friend_name'] + """') OR (email1='""" + request.form['friend_name']  + """'AND email2= '""" + username + """')"""
+        cur.execute(sql_command)
     print sql_command
     return 'OK'
 
@@ -126,6 +127,7 @@ def do_add_circle(username):
     with con:
         cur = con.cursor()
         sql_command = """UPDATE friends SET circle='""" + request.form['circle_num'] + """' WHERE (email1='""" + username + """' AND email2='""" + request.form['friend_name'] + """')"""
+        cur.execute(sql_command)
     return 'OK'
 
 
