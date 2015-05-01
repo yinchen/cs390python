@@ -7,6 +7,7 @@ app.controller('MainCtrl', function($http, $cookies, $cookieStore) {
     main.requests = [];
     main.friends = [];
     main.posts = [];
+    main.circles = [];
     main.postCircle = null;
     main.postText = "";
     main.postImage = undefined;
@@ -20,6 +21,7 @@ app.controller('MainCtrl', function($http, $cookies, $cookieStore) {
     main.requestResponse = requestResponse;
     main.displayFriend = displayFriend;
     main.newPost = newPost;
+    main.addToCircle = addToCircle;
 
     init();
 
@@ -54,15 +56,23 @@ app.controller('MainCtrl', function($http, $cookies, $cookieStore) {
     }
 
     function retrieveData() {
-        $http.get('/waitlist/' + main.me)
+        $http.get('/waitlist/' + $cookies.email)
             .success(function(data) {
                 var list = data["waiting list"];
                 main.requests = _.uniq(list);
             });
 
-        $http.get('/friends/' + main.me)
+        $http.get('/friends/' + $cookies.email)
             .success(function(data) {
                 main.friends = data.friends;
+            });
+
+        $http.get('/circle_amount/' + $cookies.email)
+            .success(function(data){
+                var circ_num = data.circles;
+                for(var i = 1; i <= circ_num; i++) {
+                    main.circles.push(i);
+                }
             });
 
         $http({
@@ -70,7 +80,7 @@ app.controller('MainCtrl', function($http, $cookies, $cookieStore) {
             method: "POST",
             headers: { 'Content-Type': 'application/json' },
             data: JSON.stringify({
-                username: main.me
+                username: $cookies.email
             })
         }).success(function(data) {
             main.posts = data.feed;
@@ -114,6 +124,7 @@ app.controller('MainCtrl', function($http, $cookies, $cookieStore) {
         main.requests = [];
         main.friends = [];
         main.posts = [];
+        main.circles = [];
         main.loggedIn = false;
         main.me = undefined;
         main.postCircle = null;
@@ -127,7 +138,7 @@ app.controller('MainCtrl', function($http, $cookies, $cookieStore) {
             method: "POST",
             headers: { 'Content-Type': 'application/json' },
             data: JSON.stringify({
-                username: main.me,
+                username: $cookies.email,
                 target: friend
             })
         }).success(function() {
@@ -149,7 +160,7 @@ app.controller('MainCtrl', function($http, $cookies, $cookieStore) {
             method: "POST",
             headers: { 'Content-Type': 'application/json' },
             data: JSON.stringify({
-                username: main.me,
+                username: $cookies.email,
                 target: target,
                 result: result
             })
@@ -183,7 +194,7 @@ app.controller('MainCtrl', function($http, $cookies, $cookieStore) {
             method: "POST",
             headers: { 'Content-Type': 'application/json' },
             data: JSON.stringify({
-                username: main.me,
+                username: $cookies.email,
                 text: text,
                 circle: circle,
                 picture: image
@@ -199,7 +210,7 @@ app.controller('MainCtrl', function($http, $cookies, $cookieStore) {
                 method: "POST",
                 headers: { 'Content-Type': 'application/json' },
                 data: JSON.stringify({
-                    username: main.me
+                    username: $cookies.email
                 })
             }).success(function(data) {
                 main.posts = data.feed;
@@ -207,5 +218,19 @@ app.controller('MainCtrl', function($http, $cookies, $cookieStore) {
         });
     }
 
-    main.circles = [1, 2];
+    function addToCircle(friend, circle) {
+        $http({
+            url: '/add_circle/' + $cookies.email,
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            data: JSON.stringify({
+                friend_name: friend.email,
+                circle_num: circle
+            })
+        }).success(function() {
+            friend.circle = circle;
+        })
+    }
+
+
 });
